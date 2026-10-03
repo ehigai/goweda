@@ -15,6 +15,11 @@ type Condition struct {
 	TempC string `json:"temp_C"`
 	FeelsLikeC string 
 	Humidity string `json:"humidity"`
+	WeatherDesc []WeatherDescription `json:"weatherDesc"`
+}
+
+type WeatherDescription struct {
+	Value string `json:"value"`
 }
 
 type WeatherData struct {
@@ -70,8 +75,9 @@ func main() {
 		current := weather.Current[0]
 
 		fmt.Printf("\nWeather in %s:\n", *city)
-		fmt.Printf("Temperature: %sdeg (Feels like %sdeg)\n", current.TempC ,current.FeelsLikeC)
+		fmt.Printf("Temperature: %sdeg (Feels like %sdeg)\n", current.TempC, current.FeelsLikeC)
 		fmt.Printf("Humidity: %s%%\n", current.Humidity)
+		fmt.Printf("Description: %s\n", current.WeatherDesc[0].Value)
 		os.Exit(0)
 	}
 
