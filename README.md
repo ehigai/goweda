@@ -55,7 +55,6 @@ Example output:
 
 ```plaintext
 Fetching weather details for: Lagos
-API URL: https://wttr.in/Lagos?format=j1
 
 Weather in Lagos:
 Conditions:  Partly cloudy
