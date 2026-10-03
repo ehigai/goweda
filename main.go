@@ -37,7 +37,6 @@ func main() {
 	url := fmt.Sprintf("https://wttr.in/%s?format=j1", formatedCity)
 
 	fmt.Println("Fetching weather details for: ", *city)
-	fmt.Println("API URL: ", url)
 
 
 	// Hit the url endpoint
