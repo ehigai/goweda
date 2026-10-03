@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -8,6 +9,17 @@ import (
 	"os"
 	"strings"
 )
+
+
+type Condition struct {
+	TempC string `json:"temp_C"`
+	FeelsLikeC string 
+	Humidity string `json:"humidity"`
+}
+
+type WeatherData struct {
+	Current []Condition `json:"current_condition"`
+}
 
 func main() {
 	// Define the city flag with a default value
@@ -24,7 +36,6 @@ func main() {
 
 
 	// Hit the url endpoint
-
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("Failed to reach the API: %v\n", err)
@@ -46,13 +57,24 @@ func main() {
 		os.Exit(1)
 	}
 
-	// conver bytes to string
-	rawJSON := string(responseBodyBytes)
+	var weather WeatherData
 
-	fmt.Println("\n--- Raw API Response (First 300 characters) ---")
-	if len(rawJSON) > 300 {
-		fmt.Println(rawJSON[:300] + "...\n")
-	} else {
-		fmt.Println(rawJSON)
+	// Convert the json bytes into a struct
+	err = json.Unmarshal(responseBodyBytes, &weather) // we must pass a pointer so it can modify our variable
+	if err != nil {
+		fmt.Printf("Failed to parse JSON: %v\n", err)
+		os.Exit(1)
 	}
+
+	if len(weather.Current) > 0 {
+		current := weather.Current[0]
+
+		fmt.Printf("\nWeather in %s:\n", *city)
+		fmt.Printf("Temperature: %sdeg (Feels like %sdeg)\n", current.TempC ,current.FeelsLikeC)
+		fmt.Printf("Humidity: %s%%\n", current.Humidity)
+		os.Exit(0)
+	}
+
+	fmt.Printf("Could not find weather codition for city: %s", *city)
+	
 }
